@@ -1,0 +1,50 @@
+services:
+  mysql:
+    image: mysql
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: nextTestTask
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - nextTestTasknetwork
+
+  web:
+    image: nexttesttask-app
+    restart: always
+    build: .
+    depends_on:
+      - mysql
+    command: sh -c "npx prisma db push --accept-data-loss && npm start"
+    ports:
+      - '3000:3000'
+      - '5555:5555'
+    environment:
+      - DATABASE_URL=mysql://root@localhost:3306/nextTestTask
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - nextTestTasknetwork
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    restart: always
+    container_name: nginx
+    depends_on:
+      - web
+    ports:
+      - '80:80'
+    networks:
+      - nextTestTasknetwork
+
+networks:
+  nextTestTasknetwork:
+    driver: bridge
+
+volumes:
+  mysql_data:

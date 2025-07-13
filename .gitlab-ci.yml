@@ -1,0 +1,28 @@
+stages:
+  - build
+  - deploy
+  - cleanup
+
+build-job:
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - echo "Compile complete."
+    - docker compose up -d --build
+
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Starting services with Docker Compose..."
+    - echo "Deployment complete."
+
+cleanup-job:
+  stage: cleanup
+  script:
+    - echo "Cleaning up unused containers, images, and volumes..."
+    - docker container prune -f
+    - docker image prune -f
+    - docker volume prune -f
+    - docker network prune -f
+    - docker system prune -af
+  when: always

@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Pool {
+  id                String @id @default(cuid())
+  name              String
+  hashrateTHs       Float
+  activeWorkers     Int
+  rejectRate        Float
+  status            Status
+  last24hRevenueBTC Float @default(0)
+  uptimePercent     Float @default(0)
+  location          String @default("")
+  feePercent        Float @default(0)
+}
+
+enum Status {
+  ONLINE
+  DEGRADED
+  OFFLINE
+}
