@@ -1,4 +1,3 @@
-// src/features/themeSwitcher/ui/ThemeToggle.tsx
 "use client";
 import { IconButton, Tooltip } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
